@@ -15,8 +15,6 @@
 /* Сброс стилей для виджета */
 #chat-widget-container * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 #chat-widget-container {
@@ -272,8 +270,8 @@
 
 .initial-button.primary:hover {
     background-color: #0056b3;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    /* transform: translateY(-1px); */
+    /* box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3); */
 }
 
 .initial-button.secondary {
@@ -284,7 +282,7 @@
 .initial-button.secondary:hover {
     background-color: var(--chat-primary-color);
     color: white;
-    transform: translateY(-1px);
+    /* transform: translateY(-1px); */
 }
 
 #typing-indicator {
