@@ -1,14 +1,12 @@
-// chat-widget.js v1.0.0
+// chat-widget.js v1.0.1 (с кастомными стилями)
 (() => {
     'use strict';
 
-    // Проверяем, что виджет не был уже загружен
     if (window.ChatWidget) {
         console.warn('Chat Widget уже загружен');
         return;
     }
 
-    // Получаем текущий тег скрипта, чтобы прочитать data-атрибуты
     const scriptTag = document.currentScript;
     
     if (!scriptTag) {
@@ -25,7 +23,6 @@
         return;
     }
 
-    // Загружаем CSS только если он еще не загружен
     const existingCSS = document.querySelector(`link[href="${CSS_URL}"]`);
     if (!existingCSS) {
         const link = document.createElement('link');
@@ -35,7 +32,6 @@
         document.head.appendChild(link);
     }
 
-    // Создаем HTML-структуру виджета
     const widgetHTML = `
         <div id="chat-widget-container">
             <button id="chat-toggle" aria-label="Открыть чат">
@@ -63,13 +59,11 @@
         </div>
     `;
     
-    // Проверяем, что элемент еще не существует
     if (document.getElementById('chat-widget-container')) {
         console.warn('Chat Widget уже существует на странице');
         return;
     }
 
-    // Ждем загрузки DOM
     const insertWidget = () => {
         document.body.insertAdjacentHTML('beforeend', widgetHTML);
         initializeWidget();
@@ -82,7 +76,6 @@
     }
 
     function initializeWidget() {
-        // Получаем элементы
         const chatToggle = document.getElementById('chat-toggle');
         const chatWidget = document.getElementById('chat-widget');
         const chatMessages = document.getElementById('chat-messages');
@@ -91,12 +84,33 @@
         const initialState = document.getElementById('initial-state');
         const startChatButton = document.getElementById('start-chat-button');
         const telegramButton = document.getElementById('telegram-button');
+        
+        // НОВЫЙ КОД: Получаем главный контейнер виджета
+        const widgetContainer = document.getElementById('chat-widget-container');
 
-        // Проверяем, что все элементы найдены
-        if (!chatToggle || !chatWidget || !chatMessages || !chatForm || !chatInput || !initialState || !startChatButton || !telegramButton) {
+        if (!chatToggle || !chatWidget || !chatMessages || !chatForm || !chatInput || !initialState || !startChatButton || !telegramButton || !widgetContainer) {
             console.error('Chat Widget: Не удалось найти необходимые элементы');
             return;
         }
+
+        // НОВЫЙ КОД: Применяем кастомные стили из data-атрибута
+        const customStylesJSON = scriptTag.dataset.customStyles;
+        if (customStylesJSON) {
+            try {
+                const customStyles = JSON.parse(customStylesJSON);
+                for (const [property, value] of Object.entries(customStyles)) {
+                    // Убедимся, что устанавливаем только CSS переменные, чтобы избежать проблем с безопасностью
+                    if (property.startsWith('--')) {
+                        widgetContainer.style.setProperty(property, value);
+                    } else {
+                        console.warn(`Chat Widget: Пропущено некорректное свойство в data-custom-styles: ${property}. Поддерживаются только CSS переменные (начинаются с '--').`);
+                    }
+                }
+            } catch (error) {
+                console.error('Chat Widget: Ошибка парсинга JSON из data-custom-styles. Убедитесь, что это валидный JSON в одинарных кавычках с двойными кавычками внутри.', error);
+            }
+        }
+        // КОНЕЦ НОВОГО КОДА
 
         let isTyping = false;
         let requestController = null;
@@ -136,7 +150,6 @@
         };
 
         const sendMessageToBot = async (message) => {
-            // Отменяем предыдущий запрос, если он есть
             if (requestController) {
                 requestController.abort();
             }
@@ -181,7 +194,6 @@
             }
         };
 
-        // Обработчики событий
         chatToggle.addEventListener('click', () => {
             chatWidget.classList.toggle('hidden');
             if (!chatWidget.classList.contains('hidden')) {
@@ -211,16 +223,14 @@
             }
         });
 
-        // Закрытие виджета по Escape
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && !chatWidget.classList.contains('hidden')) {
                 chatWidget.classList.add('hidden');
             }
         });
 
-        // Экспортируем API виджета
         window.ChatWidget = {
-            version: '1.0.0',
+            version: '1.0.1',
             show: () => chatWidget.classList.remove('hidden'),
             hide: () => chatWidget.classList.add('hidden'),
             toggle: () => chatWidget.classList.toggle('hidden'),

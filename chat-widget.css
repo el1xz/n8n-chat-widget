@@ -1,6 +1,7 @@
 /* chat-widget.css v1.0.0 */
 :root {
     --chat-primary-color: #007bff;
+    --chat-primary-hover: #0056b3;
     --chat-secondary-color: #f0f4f8;
     --chat-background-color: #ffffff;
     --chat-text-color: #333333;
@@ -88,7 +89,7 @@
 
 .chat-header {
     padding: 16px 20px;
-    background: linear-gradient(135deg, var(--chat-primary-color), #0056b3);
+    background: linear-gradient(135deg, var(--chat-primary-color), var(--chat-primary-hover));
     color: white;
     font-weight: 600;
     font-size: 16px;
@@ -214,7 +215,7 @@
 }
 
 #chat-submit:hover {
-    background-color: #0056b3;
+    background-color: var(--chat-primary-hover);
     transform: scale(1.05);
 }
 
@@ -269,7 +270,7 @@
 }
 
 .initial-button.primary:hover {
-    background-color: #0056b3;
+    background-color: var(--chat-primary-hover);
     /* transform: translateY(-1px); */
     /* box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3); */
 }

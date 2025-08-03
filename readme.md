@@ -1,176 +1,133 @@
-# Чат-виджет - Подключение через CDN
+# Чат-виджет для сайта
 
-## Быстрое подключение
+Гибкий и легко настраиваемый чат-виджет, который можно встроить на любой веб-сайт для взаимодействия с пользователями через n8n и Telegram.
 
-Добавьте этот код перед закрывающим тегом `</body>` на вашем сайте:
+## Возможности
+
+-   **Простая интеграция:** Достаточно добавить одну строку кода на ваш сайт.
+-   **Связь с n8n:** Отправляет сообщения пользователя на указанный n8n webhook.
+-   **Кнопка Telegram:** Позволяет пользователям быстро перейти в ваш Telegram-бот.
+-   **Гибкая кастомизация:** Внешний вид виджета можно полностью изменить с помощью CSS-переменных или подключив собственный файл стилей.
+-   **Адаптивный дизайн:** Корректно отображается на мобильных устройствах и десктопах.
+-   **JavaScript API:** Управляйте виджетом (открыть, закрыть, отправить сообщение) с помощью простого API.
+-   **Индикатор набора текста:** Пользователи видят, когда ассистент "печатает" ответ.
+
+## Установка
+
+1.  Разместите файлы `chat-widget.js` и `chat-widget.css` на вашем сервере или CDN.
+2.  Добавьте следующий код перед закрывающим тегом `</body>` на вашей HTML-странице:
 
 ```html
-<script 
-    src="https://your-cdn.com/chat-widget.js"
-    data-n8n-webhook-url="https://your-n8n-webhook.com/webhook/chat"
-    data-telegram-url="https://t.me/your_bot"
-    data-css-url="https://your-cdn.com/chat-widget.css"
-></script>
+<script src="ПУТЬ_К_ВАШЕМУ/chat-widget.js" 
+        data-n8n-webhook-url="https://your-n8n-instance/webhook/chat"
+        data-telegram-url="https://t.me/your_telegram_bot"
+        defer>
+</script>
 ```
 
-## Параметры подключения
+### Обязательные атрибуты
 
-### Обязательные параметры:
+-   `data-n8n-webhook-url`: URL вашего вебхука в n8n, который будет принимать сообщения от пользователя.
+-   `data-telegram-url`: Полная ссылка на вашего Telegram-бота.
 
-- `data-n8n-webhook-url` - URL вашего N8N webhook для обработки сообщений
-- `data-telegram-url` - Ссылка на ваш Telegram бот
+---
 
-### Необязательные параметры:
+## Настройка стилей
 
-- `data-css-url` - Кастомный URL для CSS файла (по умолчанию ищется рядом с JS файлом)
+Вы можете кастомизировать внешний вид виджета двумя способами.
 
-## Примеры подключения
+### 1. Подключение своего CSS-файла
 
-### 1. Базовое подключение
+Добавьте атрибут `data-css-url` в тег скрипта, указав путь к вашему файлу стилей. Это заменит стандартный `chat-widget.css`.
+
 ```html
-<script 
-    src="https://cdn.jsdelivr.net/gh/yourusername/chat-widget@main/chat-widget.js"
-    data-n8n-webhook-url="https://your-webhook.n8n.cloud/webhook/chat"
-    data-telegram-url="https://t.me/your_support_bot"
-></script>
+<script src="ПУТЬ_К_ВАШЕМУ/chat-widget.js" 
+        data-css-url="ПУТЬ_К_ВАШЕМУ_КАСТОМНОМУ/styles.css"
+        ...>
+</script>
 ```
 
-### 2. С кастомными стилями
+### 2. Переопределение CSS-переменных
+
+Для быстрой и безопасной кастомизации используйте атрибут `data-custom-styles`. Передайте в него JSON-объект в одинарных кавычках, где ключи - это CSS-переменные, а значения - их новые цвета.
+
+**Пример:**
+
 ```html
-<script 
-    src="https://cdn.jsdelivr.net/gh/yourusername/chat-widget@main/chat-widget.js"
-    data-n8n-webhook-url="https://your-webhook.n8n.cloud/webhook/chat"
-    data-telegram-url="https://t.me/your_support_bot"
-    data-css-url="https://your-domain.com/custom-chat-styles.css"
-></script>
+<script src="ПУТЬ_К_ВАШЕМУ/chat-widget.js"
+        data-custom-styles='{
+            "--chat-primary-color": "#ff6347",
+            "--chat-primary-hover": "#e0553c",
+            "--chat-bubble-user-bg": "#ff6347"
+        }'
+        ...>
+</script>
 ```
 
-### 3. Для GitHub Pages
-```html
-<script 
-    src="https://yourusername.github.io/chat-widget/chat-widget.js"
-    data-n8n-webhook-url="https://your-webhook.n8n.cloud/webhook/chat"
-    data-telegram-url="https://t.me/your_support_bot"
-></script>
-```
+**Доступные CSS-переменные для кастомизации:**
 
-## Настройка CDN
+| Переменная                 | Описание                                  | Стандартное значение |
+| -------------------------- | ----------------------------------------- | -------------------- |
+| `--chat-primary-color`     | Основной цвет (кнопки, заголовок)         | `#007bff`            |
+| `--chat-primary-hover`     | Основной цвет при наведении               | `#0056b3`            |
+| `--chat-secondary-color`   | Второстепенный цвет                       | `#f0f4f8`            |
+| `--chat-background-color`  | Фон виджета                               | `#ffffff`            |
+| `--chat-text-color`        | Основной цвет текста                      | `#333333`            |
+| `--chat-bubble-bot-bg`     | Фон сообщения от бота                     | `#e9e9eb`            |
+| `--chat-bubble-user-bg`    | Фон сообщения от пользователя             | `var(--chat-primary-color)` |
+| `--chat-bubble-user-text`  | Цвет текста в сообщении пользователя      | `#ffffff`            |
+| `--chat-border-color`      | Цвет границ                               | `#e1e5e9`            |
+| `--chat-shadow`            | Тень виджета                              | `0 5px 25px rgba(0,0,0,0.15)` |
 
-### Вариант 1: GitHub + jsDelivr (Рекомендуется)
-
-1. Создайте репозиторий на GitHub
-2. Загрузите файлы `chat-widget.js` и `chat-widget.css`
-3. Используйте jsDelivr для CDN:
-   ```
-   https://cdn.jsdelivr.net/gh/USERNAME/REPO@main/chat-widget.js
-   https://cdn.jsdelivr.net/gh/USERNAME/REPO@main/chat-widget.css
-   ```
-
-### Вариант 2: Собственный сервер
-
-1. Загрузите файлы на ваш сервер
-2. Настройте CORS заголовки для кросс-доменных запросов:
-   ```
-   Access-Control-Allow-Origin: *
-   Access-Control-Allow-Methods: GET
-   ```
-
-### Вариант 3: Другие CDN провайдеры
-
-- **unpkg**: `https://unpkg.com/your-package@version/chat-widget.js`
-- **Cloudflare**: `https://cdnjs.cloudflare.com/ajax/libs/your-lib/version/chat-widget.js`
-- **Amazon CloudFront**: настройте собственный CloudFront distribution
+---
 
 ## JavaScript API
 
-После загрузки виджета доступен глобальный объект `window.ChatWidget`:
+Вы можете управлять виджетом с помощью глобального объекта `window.ChatWidget`.
 
 ```javascript
-// Показать виджет
-ChatWidget.show();
+// Проверить, что виджет загружен
+if (window.ChatWidget) {
+    // Открыть чат
+    window.ChatWidget.show();
 
-// Скрыть виджет
-ChatWidget.hide();
+    // Закрыть чат
+    window.ChatWidget.hide();
 
-// Переключить видимость
-ChatWidget.toggle();
+    // Переключить состояние (открыт/закрыт)
+    window.ChatWidget.toggle();
+    
+    // Проверить, открыт ли чат
+    console.log('Чат открыт:', window.ChatWidget.isOpen()); // true или false
 
-// Добавить сообщение программно
-ChatWidget.addMessage('Привет!', 'bot');
-
-// Проверить, открыт ли виджет
-if (ChatWidget.isOpen()) {
-    console.log('Виджет открыт');
+    // Добавить сообщение в чат от имени пользователя или бота
+    // Синтаксис: addMessage(text, sender, isHTML)
+    // sender может быть 'user' или 'bot'
+    window.ChatWidget.addMessage('Привет! Это тестовое сообщение.', 'bot');
 }
 ```
 
-## Кастомизация стилей
+---
 
-### CSS переменные для быстрой настройки:
+## Требования к n8n Webhook
 
-```css
-:root {
-    --chat-primary-color: #007bff;        /* Основной цвет */
-    --chat-secondary-color: #f0f4f8;      /* Вторичный цвет */
-    --chat-background-color: #ffffff;     /* Фон виджета */
-    --chat-text-color: #333333;           /* Цвет текста */
-    --chat-bubble-bot-bg: #e9e9eb;        /* Фон сообщений бота */
-    --chat-bubble-user-bg: #007bff;       /* Фон сообщений пользователя */
-    --chat-bubble-user-text: #ffffff;     /* Цвет текста пользователя */
+Ваш вебхук должен быть настроен на метод `POST` и уметь обрабатывать и отправлять JSON.
+
+**Входящий запрос (от виджета к n8n):**
+
+Вебхук получит JSON следующего формата:
+
+```json
+{
+  "message": "Сообщение от пользователя"
 }
 ```
 
-### Пример кастомизации:
+**Ответ (от n8n к виджету):**
 
-```html
-<style>
-:root {
-    --chat-primary-color: #28a745;
-    --chat-bubble-user-bg: #28a745;
+Вебхук должен вернуть JSON со следующим ключом:
+
+```json
+{
+  "reply": "Ответ от вашего ассистента"
 }
-</style>
-<script 
-    src="https://your-cdn.com/chat-widget.js"
-    data-n8n-webhook-url="https://your-webhook.com"
-    data-telegram-url="https://t.me/your_bot"
-></script>
-```
-
-## Безопасность
-
-1. **HTTPS Only**: Используйте только HTTPS для всех URL
-2. **CSP**: Добавьте в Content Security Policy:
-   ```
-   script-src 'self' https://your-cdn.com;
-   style-src 'self' https://your-cdn.com 'unsafe-inline';
-   ```
-3. **Валидация данных**: Всегда валидируйте данные на стороне сервера (N8N webhook)
-
-## Отладка
-
-1. Откройте Developer Tools (F12)
-2. Проверьте Console на наличие ошибок
-3. Убедитесь, что все ресурсы загружаются корректно в Network tab
-4. Виджет логирует "Chat Widget успешно инициализирован" при успешной загрузке
-
-## Поддержка браузеров
-
-- Chrome 60+
-- Firefox 55+
-- Safari 12+
-- Edge 79+
-- Mobile Safari 12+
-- Chrome Mobile 60+
-
-## Лицензия
-
-MIT License - свободно используйте в коммерческих и некоммерческих проектах.
-
-## Версионирование
-
-Текущая версия: 1.0.0
-
-Для получения конкретной версии используйте:
-```html
-<script src="https://cdn.jsdelivr.net/gh/username/repo@v1.0.0/chat-widget.js"></script>
-```
